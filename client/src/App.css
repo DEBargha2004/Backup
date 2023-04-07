@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,body,#root{
+    height: 100%;
+    overflow-x: hidden;
+}
+.app-logo{
+    font-family: 'Rubik', sans-serif;
+}
