@@ -5,8 +5,11 @@ import bcrypt from 'bcrypt'
 import { transporter } from '../configurations/mailer.js'
 import randomNum from '../functions/rand_num.js'
 import { reverse } from '../functions/reverse.js'
+import * as dotenv from 'dotenv'
+import axios from 'axios'
 
 
+dotenv.config()
 const signRoute = express.Router()
 const saltRounds = 10
 
@@ -78,6 +81,7 @@ signRoute.route('/signin').post((req, res) => {
                 }
             })
         } else {
+
             if (validation_result.length) {
                 let encrypted_password = validation_result[0].password
                 bcrypt.compare(password, encrypted_password, (err, comparison) => {
@@ -110,8 +114,8 @@ signRoute.route('/signin').post((req, res) => {
                                             'server_message': {
                                                 status: 'success',
                                                 data: {
-                                                    username : fullname,
-                                                    file_data : reverse(file_result)
+                                                    username: fullname,
+                                                    file_data: reverse(file_result)
                                                 }
                                             }
 
@@ -140,61 +144,57 @@ signRoute.route('/signin').post((req, res) => {
     })
 })
 
-signRoute.route('/logChecker').get((req, res) => {
+signRoute.route('/logChecker').get(async (req, res) => {
     console.log('request from logchecker');
     let cookie = req.cookies.cookie
-    if (!cookie) {
-        res.json({
-            'server_message': {
-                status: 'Cookie expired'
-            }
+    try {
+        let response = await axios.post(`http://localhost:4000/cookieChecker?authorized_id=${process.env.authorized_code}`, {
+            cookie
         })
-    } else {
-        connection.query('select * from cookieinfo where cookie = ?', [cookie], (err, result) => {
-            if (result.length) {
-                const expiry = result[0].expiry
-                const user = result[0].user
-                console.log(user);
-                if (expiry >= Date.now()) {
-                    connection.query('select * from userinfo where emailid = ?', [user], (err, result_data) => {
-                        let fullname = `${result_data[0].firstname} ${result_data[0].lastname}`
-                        let userid = result_data[0].userid
-                        connection.query('select * from mediainfo where userid = ?', [userid], (err, file_result) => {
-                            if (err) {
-                                console.log(err);
-                                res.json({
-                                    server_message: {
-                                        status: 'Something went wrong, please try again later'
-                                    }
-                                })
-                            } else {
-                                res.json({
-                                    server_message: {
-                                        status: 'success',
-                                        data: {
-                                            username: fullname,
-                                            file_data: reverse(file_result)
-                                        }
-                                    }
-                                })
+        if (response.data.server_message.status === 'success') {
+            const { user: emailid } = response.data.server_message
+            connection.query('select * from userinfo where emailid = ?', [emailid], (err, result) => {
+                const fullname = `${result[0].firstname} ${result[0].lastname}`
+                const userid = result[0].userid
+                connection.query('select * from mediainfo where userid = ?', [userid], (err, file_result) => {
+                    if (err) {
+                        res.json({
+                            server_message: {
+                                status: 'Something went wrong, please try again later'
                             }
                         })
-                    })
-                } else {
-                    res.json({
-                        'server_message': {
-                            status: 'Cookie expired'
+                    } else {
+                        if (err) {
+                            res.json({
+                                'server_message': {
+                                    status: 'Something went wrong please try again later'
+                                }
+                            })
+                        } else {
+                            res.json({
+                                'server_message': {
+                                    status: 'success',
+                                    data: {
+                                        username: fullname,
+                                        file_data: reverse(file_result)
+                                    }
+                                }
+
+                            })
                         }
-                    })
-                }
-            }
-        })
+                    }
+                })
+            })
+        }
+    } catch (error) {
+
     }
 })
 
 
 signRoute.route('/forgotpass').post((req, res) => {
     let emailid = req.body.emailid
+    console.log(emailid);
     connection.query('select * from userinfo where emailid = ?', [emailid], (err, existance_result) => {
         if (err) {
             res.json({
@@ -214,7 +214,7 @@ signRoute.route('/forgotpass').post((req, res) => {
                 connection.query('delete from otp where username = ?', [emailid])
                 connection.query('insert into otp values(?,?,?)', [emailid, OTP, Date.now() + 5 * 60 * 1000])
                 const options = {
-                    from: 'teamdrawer1225@gmail.com',
+                    from: process.env.email_user,
                     to: emailid,
                     subject: 'OTP for your Drawer App',
                     html: `<p>Your OTP for password changing request is <b>${OTP}</b></p><p>Donot share this with anyone.This is valid for next 5 minutes.</p>`
@@ -225,8 +225,9 @@ signRoute.route('/forgotpass').post((req, res) => {
                             status: 'success'
                         }
                     })
-                }).catch(e => {
+                }).catch(error => {
                     console.log('mail not sent');
+                    console.log(error);
                     res.json({
                         server_message: {
                             status: 'Something went wrong please try again later'
@@ -258,7 +259,7 @@ signRoute.route('/otpchannel').post((req, res) => {
                 })
             } else {
                 connection.query('delete from otp where (username = ?  and otp = ?)', [emailID, userOTP])
-                connection.query('insert into otpcookie values(?,?,?)', [emailID, otpCookie, 10 * 60 * 1000])
+                connection.query('insert into otpcookie values(?,?,?)', [emailID, otpCookie, Date.now() + 10 * 60 * 1000])
                 res.cookie('OTP_Cookie', otpCookie, {
                     maxAge: 10 * 60 * 1000,
                     sameSite: 'lax'
@@ -275,6 +276,7 @@ signRoute.route('/otpchannel').post((req, res) => {
 
 signRoute.route('/changePassword').post((req, res) => {
     let otpCookie = req.cookies.OTP_Cookie
+    console.log(otpCookie);
     let password = req.body.password
     let confirmPassword = req.body.confirmPassword
     let emailID;
@@ -362,9 +364,11 @@ signRoute.route('/logout').post((req, res) => {
 signRoute.route('/cookieChecker').post((req, res) => {
     console.log('accepted in cookieChecker');
     let userCookie = req.body.cookie
+    console.log(userCookie);
     let authorized_id = req.query.authorized_id
     if (authorized_id === process.env.authorized_code) {
         if (!userCookie) {
+            console.log('cookie expired');
             res.json({
                 server_message: {
                     status: 'Cookie Expired'
@@ -372,6 +376,7 @@ signRoute.route('/cookieChecker').post((req, res) => {
             })
         } else {
             connection.query('select * from cookieinfo where cookie = ?', [userCookie], (err, cookie_result) => {
+                console.log(cookie_result);
                 if (!cookie_result.length) {
                     res.json({
                         server_message: {
@@ -381,6 +386,7 @@ signRoute.route('/cookieChecker').post((req, res) => {
                 } else {
                     const { expiry, user } = cookie_result[0]
                     if (expiry > Date.now()) {
+                        console.log('passed');
                         res.json({
                             server_message: {
                                 status: 'success',
@@ -398,6 +404,7 @@ signRoute.route('/cookieChecker').post((req, res) => {
             })
         }
     } else {
+        console.log('unauthorized access');
         res.json({
             server_message: {
                 status: 'You are not authorized'
@@ -408,3 +415,5 @@ signRoute.route('/cookieChecker').post((req, res) => {
 
 
 export default signRoute;
+
+

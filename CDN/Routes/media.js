@@ -1,4 +1,4 @@
-import express, { response } from 'express'
+import express from 'express'
 import connection from '../configurations/sql.js'
 import fs from 'fs'
 import * as dotenv from 'dotenv'

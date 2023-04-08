@@ -11,7 +11,7 @@ export const handleUploadMedia = async (setFileUploadDialog,setFile,file,setShou
     setFileUploadDialog({ status: false })
     setFile(null)
     if (response.server_message.status === 'success') {
-      alert('image uploaded')
+      alert('File Uploaded')
       setShouldRefresh(true)
     } else {
       alert(response.server_message.status)

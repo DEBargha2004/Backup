@@ -10,6 +10,7 @@ export default async function logChecker(setLoggedin,setAppData){
     response = await response.json()
     if(response.server_message.status === 'success'){
         setLoggedin(true)
+        console.log(response.server_message.data);
         setAppData(response.server_message.data)
     }else{
         setLoggedin(false)
