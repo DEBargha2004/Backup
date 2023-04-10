@@ -1,18 +1,56 @@
 import React from 'react'
+import FileWrapper from './FileWrapper'
+import values from '../assets/value'
+const { file_style } = values
 
-function FileViewer({media_code,userid,mimetype,filename}) {
+function FileViewer({ media_code, userid, mimetype, filename }) {
+
   const type = mimetype.split('/')[0]
-  if(type === 'image'){
+  const src = `http://localhost:5000/media?userid=${userid}&location=${media_code}&mimetype=${mimetype}`
+
+
+
+  if (type === 'image') {
     return (
-        <a href={`http://localhost:5000/media?userid=${userid}&location=${media_code}&mimetype=${mimetype}`} download>
-            <img src={`http://localhost:5000/media?userid=${userid}&location=${media_code}&mimetype=${mimetype}`} className='h-[250px] w-[250px] object-cover' alt="" />
-        </a>
+      <FileWrapper
+        filename={filename}
+        type={type}
+        mimetype={mimetype}
+        userid={userid}
+        media_code={media_code}
+      >
+        <div className={file_style}>
+          <img src={src} className='' alt="" />
+        </div>
+      </FileWrapper>
     )
-  }else if(type === 'application'){
+  } else if (type === 'application') {
     return (
-      <a href={`http://localhost:5000/media?userid=${userid}&location=${media_code}&mimetype=${mimetype}`} download>
-         <embed src={`http://localhost:5000/media?userid=${userid}&location=${media_code}&mimetype=${mimetype}`} className='h-[250px] w-[250px] object-cover' type="" />
-      </a>
+      <FileWrapper
+        filename={filename}
+        type={type}
+        mimetype={mimetype}
+        userid={userid}
+        media_code={media_code}
+      >
+        <div className={file_style}>
+          <iframe src={src} className='h-[220px] w-[250px] overflow-hidden' />
+        </div>
+      </FileWrapper>
+    )
+  } else if (type === 'video') {
+    return (
+      <FileWrapper
+        filename={filename}
+        type={type}
+        mimetype={mimetype}
+        userid={userid}
+        media_code={media_code}
+      >
+        <div className={file_style}>
+          <video src={src} controls className=''></video>
+        </div>
+      </FileWrapper>
     )
   }
 }
