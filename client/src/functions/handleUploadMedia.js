@@ -1,4 +1,4 @@
-export const handleUploadMedia = async (setFileUploadDialog,setFile,file,setShouldRefresh) => {
+export const handleUploadMedia = async (setFileUploadDialog,setFile,file,setShouldRefresh,setServerMessage) => {
   const formData = new FormData()
   formData.append('user_media', file)
   if (file) {
@@ -11,7 +11,10 @@ export const handleUploadMedia = async (setFileUploadDialog,setFile,file,setShou
     setFileUploadDialog({ status: false })
     setFile(null)
     if (response.server_message.status === 'success') {
-      alert('File Uploaded')
+      setServerMessage({
+        status : true,
+        value : 'File Uploaded Successfully'
+      })
       setShouldRefresh(true)
     } else {
       alert(response.server_message.status)

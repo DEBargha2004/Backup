@@ -3,10 +3,12 @@ import FileViewer from './FileViewer'
 
 const FileContainer = ({ file_data, selected }) => {
     return (
-        <div className='w-full grid grid-cols-4 gap-3 gap-y-10'>
-            {
+        <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 gap-y-10'>
+            {   
+                
                 file_data.map((item, index) => {
                     const type = item.mimetype.split('/')[0]
+                    console.log(type,selected,selected.symbol.includes(type))
                     if (selected.symbol.includes(type)) {
                         return (
                             <FileViewer

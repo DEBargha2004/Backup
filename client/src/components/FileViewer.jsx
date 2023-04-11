@@ -1,6 +1,7 @@
 import React from 'react'
 import FileWrapper from './FileWrapper'
 import values from '../assets/value'
+import SpecificFileContainer from './SpecificFileContainer'
 const { file_style } = values
 
 function FileViewer({ media_code, userid, mimetype, filename }) {
@@ -10,49 +11,22 @@ function FileViewer({ media_code, userid, mimetype, filename }) {
 
 
 
-  if (type === 'image') {
-    return (
-      <FileWrapper
-        filename={filename}
-        type={type}
-        mimetype={mimetype}
-        userid={userid}
-        media_code={media_code}
-      >
-        <div className={file_style}>
-          <img src={src} className='' alt="" />
-        </div>
-      </FileWrapper>
-    )
-  } else if (type === 'application') {
-    return (
-      <FileWrapper
-        filename={filename}
-        type={type}
-        mimetype={mimetype}
-        userid={userid}
-        media_code={media_code}
-      >
-        <div className={file_style}>
-          <iframe src={src} className='h-[220px] w-[250px] overflow-hidden' />
-        </div>
-      </FileWrapper>
-    )
-  } else if (type === 'video') {
-    return (
-      <FileWrapper
-        filename={filename}
-        type={type}
-        mimetype={mimetype}
-        userid={userid}
-        media_code={media_code}
-      >
-        <div className={file_style}>
-          <video src={src} controls className=''></video>
-        </div>
-      </FileWrapper>
-    )
-  }
+
+  return (
+    <FileWrapper
+      filename={filename}
+      type={type}
+      mimetype={mimetype}
+      userid={userid}
+      media_code={media_code}
+      include
+    >
+      <div className={file_style}>
+        <SpecificFileContainer src={src} type={type} />
+      </div>
+    </FileWrapper>
+  )
+
 }
 
 export default FileViewer;

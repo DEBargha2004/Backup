@@ -28,8 +28,7 @@ MediaRoute.route('/media').get((req, res) => {
                 'Content-Type': mimetype,
                 'Content-Length': content_length,
                 'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                'Accept-Ranges': 'bytes',
-                'Cache-Control': `public,max-age=${30 * 24 * 60 * 60 * 1000}`
+                'Accept-Ranges': 'bytes'
             })
 
             const stream = fs.createReadStream(absoluteLocation, { start, end })

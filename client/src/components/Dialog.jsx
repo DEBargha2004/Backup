@@ -9,9 +9,9 @@ function DialogBox({ children, Open, setOpen }) {
     }
     return (
         <Dialog onClose={handleClose} open={Open}>
-            <p className='p-10'>
+            <div className='p-10'>
                 {children}
-            </p>
+            </div>
         </Dialog>
     )
 }

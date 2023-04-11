@@ -4,9 +4,10 @@ const values = {
         {
             "type": "All",
             "symbol": [
+                "text",
                 "image",
                 "video",
-                "application"
+                "application",
             ],
             "id" : 0
         },
@@ -30,6 +31,12 @@ const values = {
                 "video"
             ],
             "id" : 3
+        },{
+            "type" : "Others",
+            "symbol" : [
+                "text"
+            ],
+            "id" : 4
         }
     ],
     "file_style" : "h-[250px] w-[250px] flex items-center rounded-2xl border-slate-300 border-[1px] overflow-hidden"
