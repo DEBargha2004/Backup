@@ -39,6 +39,6 @@ const values = {
             "id" : 4
         }
     ],
-    "file_style" : "h-[250px] w-[250px] flex items-center rounded-2xl border-slate-300 border-[1px] overflow-hidden"
+    "file_style" : "h-[250px] w-[90%] flex items-center rounded-2xl border-slate-300 border-[1px] overflow-hidden"
 }
 export default values

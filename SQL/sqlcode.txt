@@ -1,0 +1,33 @@
+create table userinfo(
+    firstname varchar(255),
+    lastname varchar(255),
+    emailid varchar(255) not null PRIMARY KEY,
+    password varchar(255),
+    userid varchar(255)
+)
+
+CREATE TABLE cookieinfo (
+    cookie varchar(255),
+    expiry bigint,
+    user varchar(255)
+)
+
+ CREATE TABLE mediainfo (
+    media_code varchar(255),
+    userid varchar(255),
+    mimetype varchar(255),
+    filename varchar(255),
+    foreign key (userid) references userinfo(emailid)
+)
+
+CREATE TABLE otp (
+    username varchar(255),
+    otp int,
+    expiry bigint
+)
+
+CREATE TABLE otpcookie (
+    username varchar(255),
+    cookie varchar(255),
+    expiry bigint
+)

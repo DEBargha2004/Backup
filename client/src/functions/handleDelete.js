@@ -1,4 +1,4 @@
-export const Delete = async (userid, media_code, mimetype, setDeleteDialog, filename, handleClose,setShouldRefresh) => {
+export const Delete = async (userid, media_code, mimetype, setDeleteDialog, filename, handleClose,setShouldRefresh,setServerMessage) => {
     let response = await fetch(`http://localhost:5000/deleteMedia?userid=${userid}&location=${media_code}&mimetype=${mimetype}`, {
         method: 'GET',
         credentials: 'include'

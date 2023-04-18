@@ -32,12 +32,12 @@ function FileWrapper({ children, type, filename, userid, media_code, mimetype })
 
     return (
         <>
-            <div className='flex justify-center'>
-                <div className='w-fit flex flex-col items-center justify-between h-[300px]'>
+            <div className='flex justify-center w-[95%] mx-3'>
+                <div className='w-full flex flex-col items-center justify-between h-[300px]'>
                     {children}
-                    <div className="flex justify-between w-full items-center">
+                    <div className="flex justify-between w-[90%] items-center">
                         {type === 'image' ? <Icon src={image_icon} /> : type === 'application' ? <Icon src={pdf_icon} /> : type === 'video' ? <Icon src={video_icon} /> : type === 'text' ? <Icon src={txt_icon} /> : null}
-                        <p className='w-[150px] truncate font-semibold text-slate-500'>{filename}</p>
+                        <p className='w-[50%] truncate font-semibold text-slate-500 text-sm md:text-base px-3'>{filename}</p>
                         <div>
                             <img src={dots} className='h-7 cursor-pointer' alt="" onClick={(e) => setAnchorE1(e.currentTarget)} />
                             <Menu
@@ -69,7 +69,7 @@ function FileWrapper({ children, type, filename, userid, media_code, mimetype })
             <Dialog open={deleteDialog.state} onClose={() => setDeleteDialog({ value: '', state: false })}>
                 <div className='p-8 min-h-[170px] flex flex-col justify-between items-center'>
                     <p className='text-slate-400'>Are you sure want to delete <span className='text-slate-500 font-semibold'>{deleteDialog.value}</span>. This is <span className='text-slate-500 font-semibold underline underline-offset-2'>not reversible</span>. Deleted files are deleted <span className='text-slate-500 font-semibold underline underline-offset-2'>permanently</span></p>
-                    <Button variant='contained' className='bg-red-500' color='error' onClick={()=>Delete(userid,media_code,mimetype,setDeleteDialog,filename,handleClose,setShouldRefresh)}>Delete</Button>
+                    <Button variant='contained' className='bg-red-500' color='error' onClick={()=>Delete(userid,media_code,mimetype,setDeleteDialog,filename,handleClose,setShouldRefresh,setServerMessage)}>Delete</Button>
                 </div>
             </Dialog>
             <Dialog open={serverMessage.state} onClose={() => setServerMessage(prev => ({ ...prev, state: false }))}>

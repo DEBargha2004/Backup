@@ -8,7 +8,7 @@ function SpecificFileContainer({ src, type }) {
         )
     } else if (type === 'application') {
         return (
-            <embed src={src} className='h-[220px] w-[250px] overflow-hidden' />
+            <iframe src={src} className='h-[220px] w-[90%] overflow-hidden' />
         )
     } else if (type === 'video') {
         return (
@@ -16,7 +16,7 @@ function SpecificFileContainer({ src, type }) {
         )
     } else if (type === 'text') {
         return (
-            <embed src={src} className='h-[220px] w-[250px] overflow-hidden'></embed>
+            <iframe src={src} className='h-[220px] w-[90%] overflow-hidden'></iframe>
         )
     }
 }

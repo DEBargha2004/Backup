@@ -21,9 +21,9 @@ function HomeBody() {
   const [fileUploadDialog, setFileUploadDialog] = useState({
     status: false
   })
-  const [serverMessage,setServerMessage] = useState({
-    status : false,
-    value : ''
+  const [serverMessage, setServerMessage] = useState({
+    status: false,
+    value: ''
   })
   const [selected, setSelected] = useState({
     id: 0,
@@ -40,7 +40,7 @@ function HomeBody() {
 
   useEffect(() => {
     if (file) {
-      const temporary_url = window.URL.createObjectURL(new Blob([file],{type:file.type}))
+      const temporary_url = window.URL.createObjectURL(new Blob([file], { type: file.type }))
       setUrl({
         src: temporary_url,
         type: file.type.split('/')[0]
@@ -69,19 +69,19 @@ function HomeBody() {
             console.log(item.symbol)
             return (
               <div
-              className={`w-[8%] pb-4 mx-7 text-center text-lg font-semibold cursor-pointer ${item.id === selected.id ? 'border-b-4 border-blue-500 text-blue-500' : 'text-slate-500'}`}
-              key={index}
-              onClick={() => setSelected({
-                id: index,
-                symbol: item.symbol
-              })}
-            >
-              {
-                item.type
-              }
-            </div>
+                className={`w-[8%] pb-4 mx-7 text-center text-[90%] font-semibold cursor-pointer truncate ${item.id === selected.id ? 'border-b-4 border-blue-500 text-blue-500' : 'text-slate-500'}`}
+                key={index}
+                onClick={() => setSelected({
+                  id: index,
+                  symbol: item.symbol
+                })}
+              >
+                {
+                  item.type
+                }
+              </div>
             )
-        })
+          })
         }
       </div>
       {
@@ -97,7 +97,7 @@ function HomeBody() {
           <div className='flex w-[80%] justify-center text-slate-400'>
             <span className='truncate'>{file && file.name}</span>
           </div>
-          {file && <Button variant='contained' className='bg-blue-400 text-white' onClick={() => handleUploadMedia(setFileUploadDialog, setFile, file, setShouldRefresh,setServerMessage)}>Upload</Button>}
+          {file && <Button variant='contained' className='bg-blue-400 text-white' onClick={() => handleUploadMedia(setFileUploadDialog, setFile, file, setShouldRefresh, setServerMessage)}>Upload</Button>}
         </div>
       </DialogBox>
       <DialogBox Open={serverMessage.status} setOpen={setServerMessage}>
